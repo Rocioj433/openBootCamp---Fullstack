@@ -1,3 +1,5 @@
+import { deleteAllCookies, deleteCookie, getCookieValue, setCookie } from 'cookies-utils'
+
 console.log("hola Typescript")
 
 // declaracion de variables
@@ -139,7 +141,7 @@ while (tarea1.estado != Estados.Completado) {
         tarea1.estado = Estados.Completado
         break;
     } else {
-        
+
     }
 }
 
@@ -148,10 +150,10 @@ do {
     tarea1.estado = Estados.Completado
 } while (tarea1.estado != Estados.Completado);
 
-let miTarea ={
-    titulo:"Mi tarea",
-    estados:Estados.Completado,
-    urgencia:1
+let miTarea = {
+    titulo: "Mi tarea",
+    estados: Estados.Completado,
+    urgencia: 1
 }
 
 let miTitulo = miTarea.titulo;
@@ -161,62 +163,236 @@ let miUrgencia = miTarea.urgencia;
 //Spred operator
 
 //En Variables
-let {titulo,estados,urgencia} = miTarea;
+let { titulo, estados, urgencia } = miTarea;
 
 //En listas
-let listaCompraLunes:string[] = ["Leche","Patatas"]
-let listaCompraMartes:string[] = [...listaCompraLunes,"Pan","huevos"]
+let listaCompraLunes: string[] = ["Leche", "Patatas"]
+let listaCompraMartes: string[] = [...listaCompraLunes, "Pan", "huevos"]
 /* let listaCompraMiercoles:boolean[] = [false] */
-let listaCompraMiercoles:string[] = ["Carne","Pescado"]
-let listaCompraSemana:string[] = [...listaCompraLunes,...listaCompraMiercoles]
+let listaCompraMiercoles: string[] = ["Carne", "Pescado"]
+let listaCompraSemana: string[] = [...listaCompraLunes, ...listaCompraMiercoles]
 
 //En Objetos
 let estadoApp = {
-    usuario:"admin",
-    session:3,
-    jwt:"Bear12345"
+    usuario: "admin",
+    session: 3,
+    jwt: "Bear12345"
 }
 
 let nuevoEstado = {
     ...estadoApp,
-    session:4
+    session: 4
 }
 
 //Funciones
 function saludar() {
-    let nombre:string = "Rocio"
-    console.log(`Hola ${nombre}`)   
+    let nombre: string = "Rocio"
+    console.log(`Hola ${nombre}`)
 }
 saludar()
 
-function saludarPersona(nombre:any){
+function saludarPersona(nombre: any) {
     console.log(`Hola ${nombre}!`);
 }
 
 saludarPersona("Rocio")
 
-function despedirPersona(nombre: string = "Pepe"){
+function despedirPersona(nombre: string = "Pepe") {
     console.log(`Adios ${nombre}`)
 }
 
-function despedidaOpcional(nombre?:string){
-    if(nombre){
+function despedidaOpcional(nombre?: string) {
+    if (nombre) {
         console.log(`Adios ${nombre}`)
-    }else{
+    } else {
         console.log("Adios")
     }
 }
 
-function variosParams(nombre:string,apellido?:string,edad:number=18){
-    if(apellido){
+function variosParams(nombre: string, apellido?: string, edad: number = 18) {
+    if (apellido) {
         console.log(`${nombre} ${apellido} tiene ${edad} años`)
-    }else{
+    } else {
         console.log(`${nombre} tiene ${edad} años`)
     }
 }
+variosParams("Martin")
+variosParams("Martin", "San Jose")
+variosParams("Martin", undefined, 30)
+variosParams("Martin", "San Jose", 30)
+variosParams(nombre = "Martin", apellidos = "San Jose", 30)
 
-//Sobrecarga de funciones
+function ejemploVariosTipos(a: string | number) {
+    if (typeof (a) === "string") {
+        console.log("A es un string")
+    } else if (typeof (a) === "number") {
+        console.log("A es un numero")
+    } else {
+        console.log("A no es un string ni tampoco un number")
+        throw Error("A no es un string ni un number");
 
-//Funciones asincronicas
+    }
+}
 
-//Funciones generadoras
+function ejemploReturn(nombre: string, apellidos: string) {
+    return `${nombre} ${apellidos}`
+}
+
+ejemploReturn("Rocio", "Sanchez")
+
+function ejemploMultipleParam(...nombres: string[]) {
+    nombres?.forEach((nombre) => {
+        console.log(nombre)
+    })
+}
+
+ejemploMultipleParam("Martin", "Lucia", "Jose")
+const lista = ["Alberto", "Cristian"]
+ejemploMultipleParam(...lista)
+
+function ejemploParamsList(nombres: string[]) {
+    nombres?.forEach((nombre) => {
+        console.log(nombre)
+    })
+}
+
+ejemploParamsList(lista)
+
+type Empleado = {
+    nombre: string,
+    apellido: string,
+    edad: number
+}
+
+let empleado = {
+    nombre: "Rocio",
+    apellido: "Sanchez",
+    edad: 20
+}
+
+const mostrarEmpleado = (empleado: Empleado) => `${empleado.nombre} tiene ${empleado.edad} años`
+
+mostrarEmpleado(empleado)
+
+const datosEmpleado = (empleado: Empleado): string => {
+    if (empleado.edad > 70) {
+        return `Empleado: ${empleado.nombre} esta en edad de jubilacion`
+    } else {
+        return `Empleado: ${empleado.nombre} esta en edad laboral`
+    }
+}
+
+datosEmpleado(empleado);
+
+const obtenerSalario = (empleado: Empleado, cobrar: () => void) => {
+    if (empleado.edad > 70) {
+        return
+    } else {
+        cobrar()
+    }
+}
+
+const cobrarEmpleado = (empleado: Empleado) => {
+    console.log(`${empleado.nombre} cobra su salario`)
+}
+
+obtenerSalario(empleado, () => 'Cobrar Rocio')
+
+//Async function
+
+async function ejemploAsync(): Promise<string> {
+    await console.log("Tarea a completar antes de seguir con la secuencia de instrucciones")
+    console.log("Tarea completada")
+    return "Completado"
+}
+
+ejemploAsync().then((res) => {
+    console.log("Respuesta: ", res)
+}).catch(error => { console.log("hay un error", error) }).finally(() => console.log("Todo ha terminado"))
+
+function* ejemploGenerator() {
+    // yield para emitir valores
+
+    let index = 0;
+    while (index < 5) {
+        yield index++;
+    }
+}
+
+let generadora = ejemploGenerator()
+console.log(generadora.next().value)
+
+
+function* watcher(valor: number) {
+    yield valor;
+
+    yield* worker(valor);
+
+    yield valor + 10;
+}
+function* worker(valor: number) {
+    yield valor + 1
+
+    yield valor + 2
+
+    yield valor + 3
+}
+
+let generatorSaga = watcher(0);
+
+console.log(generatorSaga.next().value)
+console.log(generatorSaga.next().value)
+console.log(generatorSaga.next().value)
+console.log(generatorSaga.next().value)
+
+
+function mostrarError(error: string) {
+    console.log("Ha habido un error", error)
+}
+
+//lOCALSTORAGE
+
+/* function guardarLocalStorage():void{
+    AsyncLocalStorage.
+} */
+
+//Cookies
+
+const cookieOptions = {
+    name: "usuario", // string,
+    value: "Rocio", // string,
+    maxAge: 10 * 60, // optional number (value in seconds),
+    expires: new Date(2099, 10, 1), // optional Date,
+    path: "/path", // optional string,
+};
+
+setCookie(cookieOptions)
+
+let cookieLeida = getCookieValue("usuario")
+
+deleteCookie("usuario")
+
+deleteAllCookies()
+
+class Temporizador{
+    public terminar?: (tiempo:number) => void;
+
+    public empezar(): void{
+        setTimeout(() => {
+            if(!this.terminar) return;
+
+            this.terminar(Date.now());
+        }, 10000);
+    }
+}
+
+const miTemporizador :Temporizador = new Temporizador();
+
+miTemporizador.terminar = (tiempo: number) =>{
+    console.log("Evento terminado en: ",tiempo)
+}
+
+miTemporizador.empezar();
+
+delete miTemporizador.terminar;
+
